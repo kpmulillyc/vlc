@@ -1,0 +1,62 @@
+{% extends "index.html" %}
+{% block body %}
+<iframe
+    src="http://player.twitch.tv/?channel={{ channel }}"
+    frameborder="0"
+    scrolling="no"
+    allowfullscreen="true"></iframe>
+ <div class="container">
+
+         <form action="{{ url_for('play') }}" method="POST">
+          <select name='quality' id="quality">
+        <option value='best'>Source</option>
+        <option value='high'>High</option>
+        <option value='medium'>Medium</option>
+        <option value='worst'>Low</option>
+          </select>
+            <a href="#" id="play"><button class="btn btn-success" type="button">Play Stream </button></a>
+            <a href="#" id="stop"><button class="btn btn-danger" type="button">Stop Stream </button></a>
+			<a href="#" id="check"><button class="btn btn-danger" type="button">Check Server </button></a>
+			<p></p>
+			<span id="result"> ? </span>
+         </form>
+
+</div>
+<script type=text/javascript>
+    $(document).ready(function(){
+        $("a#check").click(function(){
+            $.ajax({
+          url : "{{ url_for('check') }}",type : 'POST',
+          success : function(response){
+				console.log(response)
+		});
+        });
+        });
+    });
+</script>
+<script type=text/javascript>
+    $(document).ready(function(){
+        $("a#stop").click(function(){
+            $.ajax({
+          url : "{{ url_for('stop') }}",type : 'POST',
+          success : alert("Stopping Server boy" )
+        });
+        });
+    });
+</script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $("a#play").click(function(){
+            $.ajax({
+          url : "{{ url_for('play') }}",
+          data : $('#quality').serialize(),
+          dataType: 'text/plain',
+          type : 'POST',
+          success : alert("Starting Server on " + $('#quality').val())
+        });
+        });
+    });
+</script>
+
+
+{% endblock %}
