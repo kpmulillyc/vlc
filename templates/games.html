@@ -1,6 +1,6 @@
 {% extends "index.html" %}
 {% block body %}
-<div class="container-fluid">
+<div class="container-fluid" id="games">
     <div class="row">
 {% for i in call %}
 <div class="col-sm-4">
@@ -11,4 +11,21 @@
 {% endfor %}
     </div>
     </div>
+{% if call is not none %}
+<div id="pagination">
+    <a href=/game/{{games}}/{{id+1}} class="next">next</a>
+</div>
+{% endif %}
 {% endblock %}
+
+</body>
+</html>
+<script type="text/javascript">
+  var ias = jQuery.ias({
+  container:  '#games',
+  item:       '.col-sm-4',
+  pagination: '#pagination',
+  next:       '.next'
+});
+ias.extension(new IASSpinnerExtension());
+</script>

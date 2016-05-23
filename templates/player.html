@@ -1,12 +1,16 @@
 {% extends "index.html" %}
 {% block body %}
-<iframe
-    src="http://player.twitch.tv/?channel={{ channel }}"
-    frameborder="0"
-    scrolling="no"
-    allowfullscreen="true"></iframe>
- <div class="container">
-
+<script src="http://player.twitch.tv/js/embed/v1.js"></script>
+<div id="{PLAYER_DIV_ID}"></div>
+<script type="text/javascript">
+    var options = {
+    width : 360,
+    height: 240,
+    channel: "{{channel}}",
+    };
+    var player = new Twitch.Player("{PLAYER_DIV_ID}", options);
+    player.setVolume(0.5);
+</script>
          <form action="{{ url_for('play') }}" method="POST">
           <select name='quality' id="quality">
         <option value='best'>Source</option>
@@ -14,29 +18,29 @@
         <option value='medium'>Medium</option>
         <option value='worst'>Low</option>
           </select>
-            <a href="#" id="play"><button class="btn btn-success" type="button">Play Stream </button></a>
-            <a href="#" id="stop"><button class="btn btn-danger" type="button">Stop Stream </button></a>
-			<a href="#" id="check"><button class="btn btn-danger" type="button">Check Server </button></a>
+            <button class="btn btn-success" type="button" id="play">Play Stream </button>
+            <button class="btn btn-danger" type="button" id="stop">Stop Stream </button>
 			<p></p>
-			<span id="result"> ? </span>
+			<p><font color="orange" size="5px"><strong><span id="result">Checking for Server connection </span></strong></font> </p>
          </form>
 
 </div>
 <script type=text/javascript>
-    $(document).ready(function(){
-        $("a#check").click(function(){
+    $(function(){
+        setInterval(function(){
             $.ajax({
-          url : "{{ url_for('check') }}",type : 'POST',
-          success : function(response){
-				console.log(response)
-		});
+          url : "{{ url_for('check') }}",
+          type : 'GET',
+          success : function(data){
+				$("#result").html(data.result);
+		}
         });
-        });
+        },5000);
     });
 </script>
 <script type=text/javascript>
-    $(document).ready(function(){
-        $("a#stop").click(function(){
+    $(function(){
+        $("#stop").click(function(){
             $.ajax({
           url : "{{ url_for('stop') }}",type : 'POST',
           success : alert("Stopping Server boy" )
@@ -45,15 +49,15 @@
     });
 </script>
 <script type="text/javascript">
-    $(document).ready(function(){
-        $("a#play").click(function(){
+    $(function(){
+        $("#play").click(function(){
             $.ajax({
           url : "{{ url_for('play') }}",
           data : $('#quality').serialize(),
           dataType: 'text/plain',
           type : 'POST',
-          success : alert("Starting Server on " + $('#quality').val())
-        });
+          success : alert("Starting Server on "+$('#quality').val())
+		});
         });
     });
 </script>
