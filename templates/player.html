@@ -25,42 +25,42 @@
          </form>
 
 </div>
-<script type=text/javascript>
-    $(function(){
-        setInterval(function(){
-            $.ajax({
-          url : "{{ url_for('check') }}",
-          type : 'GET',
-          success : function(data){
-				$("#result").html(data.result);
-		}
-        });
-        },5000);
-    });
-</script>
-<script type=text/javascript>
-    $(function(){
-        $("#stop").click(function(){
-            $.ajax({
-          url : "{{ url_for('stop') }}",type : 'POST',
-          success : alert("Stopping Server boy" )
-        });
-        });
-    });
-</script>
 <script type="text/javascript">
-    $(function(){
-        $("#play").click(function(){
-            $.ajax({
-          url : "{{ url_for('play') }}",
-          data : $('#quality').serialize(),
-          dataType: 'text/plain',
-          type : 'POST',
-          success : alert("Starting Server on "+$('#quality').val())
-		});
+    function check()
+    {
+        $.ajax({
+        type: 'get',
+        url: "{{url_for("check")}}",
+        success: function(data){
+        $("#result").html(data.result);
+        }
         });
+    }
+    $(function(){
+    var channel2 = "{{channel}}";
+    check();
+    $("#play").click(function(){
+            $.getJSON('/play',{
+            quality: $("#quality").val(),
+            channel: channel2,
+            success: alert("Starting Server boy on "+channel2+" "+$("#quality").val())
+            }); setTimeout(function(){
+            check();
+            }, 2000);
+    });
+    $("#stop").click(function(){
+            $.ajax({
+            type: 'POST',
+            url: "{{ url_for('stop') }}",
+            success: alert("Stopping Server boy!")
+            }), setTimeout(function(){
+            check();
+            }, 2000);
+    });
     });
 </script>
-
 
 {% endblock %}
+
+
+

@@ -46,27 +46,27 @@ def game(games,id=0):
 
 @app.route('/player/<channel>')
 def player(channel):
-    global cname
-    cname = channel
     return render_template("player.html", channel = channel)
 
-@app.route('/play', methods=['POST'])
+@app.route('/play')
 def play():
-    chname = cname
-    qua = request.form.get('quality')
+    qua = request.args.get('quality')
+    chname = request.args.get('channel')
     cmd = ["livestreamer --player-external-http --player-external-http-port 8913 twitch.tv/"+chname+" "+qua]
-    call1 = subprocess.call(cmd,shell=True)
-    call1.terminate()
-    call1.wait()
+    p = subprocess.call(cmd,shell=True)
+    p.terminate()
+    p.wait()
 
 
 
 @app.route('/stop', methods=['POST'])
 def stop():
     cmd = ["pkill livestreamer"]
-    call2 = subprocess.call(cmd,shell=True)
-    call2.terminate()
-    call2.wait()
+    hi = "good"
+    p = subprocess.call(cmd,shell=True)
+    p.terminate()
+    p.wait()
+    return hi
 
 @app.route('/check')
 def check():
@@ -82,3 +82,4 @@ def check():
 
 if __name__ == '__main__':
     app.run()
+
