@@ -10,7 +10,15 @@
   <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 </head>
 <body>
+{% if current_user.is_authenticated  %}
+Logged in as {{ current_user.id }}, {{ current_user.pw }}
+<a href="/logout">Logout</a>
+{% else %}
+<a href="/login">Login</a> 
+
+{% endif %}
 {% block body %}
+
 <div class="container-fluid" id="games">
     <div class="row">
 {% for i in call %}
@@ -26,7 +34,7 @@
 </div>
 {% if call is not none %}
 <div id="pagination">
-    <a href=/{{id+1}} class="next">next</a>
+    <a href=/streams/{{id+1}} class="next">next</a>
 </div>
 {% endif %}
 {% endblock %}
